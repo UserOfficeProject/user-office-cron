@@ -1,0 +1,32 @@
+{
+  "name": "duo-cron-job",
+  "version": "1.0.0",
+  "description": "Node cron job service for ESS User Office project.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "env NODE_ENV=development node index.js",
+    "build": "docker build -t dmsc/duo-cron-job .",
+    "prod": "env NODE_ENV=production node index.js",
+    "test": "jest --coverage"
+  },
+  "keywords": [
+    "duo",
+    "cron-job",
+    "microservice",
+    "ess",
+    "user-office"
+  ],
+  "author": "SWAP",
+  "license": "ISC",
+  "engines": {
+    "node": ">=12.13.0"
+  },
+  "dependencies": {
+    "cron": "^1.8.2",
+    "dotenv": "^8.2.0",
+    "envalid": "^6.0.1",
+    "jest": "^26.0.1",
+    "node-fetch": "^2.6.0",
+    "sinon": "^9.0.2"
+  }
+}
