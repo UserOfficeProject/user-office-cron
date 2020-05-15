@@ -5,7 +5,7 @@ const { API_URL, API_AUTH_TOKEN } = process.env;
 class Api {
   constructor() {}
 
-  async mutation(body) {
+  async call(body) {
     try {
       const result = await fetch(API_URL, {
         method: 'post',
@@ -14,7 +14,7 @@ class Api {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${API_AUTH_TOKEN}`,
         },
-      });
+      }).then((res) => res.json());
 
       return result;
     } catch (error) {
