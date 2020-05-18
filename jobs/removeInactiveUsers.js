@@ -15,7 +15,7 @@ const getAllUsers = async () => {
   return data.users.users;
 };
 
-const getAllPromises = (allUsers) => {
+const constructAllRemoveUserPromises = (allUsers) => {
   const currentTime = new Date();
   // NOTE: 14 days before the current time
   currentTime.setDate(currentTime.getDate() - 14);
@@ -34,7 +34,7 @@ const getAllPromises = (allUsers) => {
   }, []);
 };
 
-const fireAllPromises = (allPromises) => {
+const fireAllRemoveUserPromises = (allPromises) => {
   Promise.all(allPromises)
     .then(async () => {
       console.info('Inactive users removed.');
@@ -52,10 +52,10 @@ const removeInactiveUsers = async () => {
   try {
     const allUsers = await getAllUsers();
 
-    const allPromises = getAllPromises(allUsers);
+    const allPromises = constructAllRemoveUserPromises(allUsers);
 
     if (allPromises.length > 0) {
-      fireAllPromises(allPromises);
+      fireAllRemoveUserPromises(allPromises);
     } else {
       console.info('No inactive users.');
     }
