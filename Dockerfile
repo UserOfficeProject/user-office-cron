@@ -6,7 +6,7 @@ WORKDIR /home/node
 
 COPY package*.json ./
 
-RUN npm install --production
+RUN npm install --production --no-optional
 
 COPY . .
 

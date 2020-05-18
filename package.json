@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Node cron job service for ESS User Office project.",
   "main": "index.js",
+  "repository": {
+    "url": "https://gitlab.esss.lu.se/swap/duo-cron-job"
+  },
   "scripts": {
     "dev": "env NODE_ENV=development node index.js",
     "build": "docker build -t dmsc/duo-cron-job .",
@@ -37,5 +40,8 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
     "prettier": "^2.0.5"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.1.3"
   }
 }
