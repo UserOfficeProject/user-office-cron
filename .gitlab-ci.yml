@@ -1,0 +1,38 @@
+image: node:10
+
+stages:
+  - test
+  - build-test
+  - build
+
+test:
+  stage: test
+  script:
+    - npm install
+    - NODE_ENV=ci npm run test
+  tags:
+    - docker
+
+build-test:
+  stage: build-test
+  script:
+    - npm install --only=production
+    - npm run tsc
+  tags:
+    - docker
+  except:
+    - develop
+
+docker build:
+  image: docker:stable
+  stage: build
+  script:
+    - docker info
+    - docker build . -t dmsc/duo-cron-job
+    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin
+    - docker push dmsc/duo-cron-job
+  tags:
+    - docker
+  only:
+    - develop
+
