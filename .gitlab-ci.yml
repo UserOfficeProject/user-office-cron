@@ -9,7 +9,7 @@ test:
   stage: test
   script:
     - npm install
-    - NODE_ENV=test npm run test
+    - jest --coverage
   tags:
     - docker
 
