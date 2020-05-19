@@ -2,7 +2,7 @@ Node cron job service for ESS User Office project.
 
 ## Usage
 
-Before you run you should create `.env.development` file for development mode and `.env` file for production mode in the project root directory. You can find `.env.example` file to have better overview of what enviromnent variables are required before you start.<br>
+Before you run you should make sure that `API_AUTH_TOKEN` environment variable is set with valid jsonwebtoken.<br>
 
 ## Available Scripts
 
