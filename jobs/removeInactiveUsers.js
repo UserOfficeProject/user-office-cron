@@ -8,7 +8,7 @@ const getAllUsers = async () => {
 
   const { data } = await api.call(getAllUsersBody);
 
-  if (!data.users || !data.users.users) {
+  if (!data || !data.users || !data.users.users) {
     throw new Error('Something went wrong! Could not fetch users.');
   }
 
@@ -34,8 +34,8 @@ const constructAllRemoveUserPromises = (allUsers) => {
   }, []);
 };
 
-const fireAllRemoveUserPromises = (allPromises) => {
-  Promise.all(allPromises)
+const fireAllRemoveUserPromises = async (allPromises) => {
+  return Promise.all(allPromises)
     .then(async () => {
       console.info('Inactive users removed.');
     })
@@ -46,7 +46,7 @@ const fireAllRemoveUserPromises = (allPromises) => {
     });
 };
 
-const removeInactiveUsers = async () => {
+const checkAndRemoveInactiveUsers = async () => {
   console.info('Running predefined Cron Job');
 
   try {
@@ -55,7 +55,7 @@ const removeInactiveUsers = async () => {
     const allPromises = constructAllRemoveUserPromises(allUsers);
 
     if (allPromises.length > 0) {
-      fireAllRemoveUserPromises(allPromises);
+      await fireAllRemoveUserPromises(allPromises);
     } else {
       console.info('No inactive users.');
     }
@@ -64,4 +64,7 @@ const removeInactiveUsers = async () => {
   }
 };
 
-module.exports = removeInactiveUsers;
+// NOTE: Run removeInactiveUsers every 1st and 15th each month at 7:30AM
+const options = { timeToRun: '30 7 1,15 * *' };
+
+module.exports = { functionToRun: checkAndRemoveInactiveUsers, options };
