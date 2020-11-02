@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "env NODE_ENV=development env API_URL=http://localhost:4000/graphql node index.js",
     "build": "docker build -t dmsc/duo-cron-job .",
-    "prod": "env NODE_ENV=production node index.js",
+    "prod": "env NODE_ENV=production env API_URL=http://backend:4000/graphql node index.js",
     "test": "env NODE_ENV=test env API_URL=http://localhost:4000/graphql env API_AUTH_TOKEN=testtoken jest --coverage",
     "lint": "eslint --fix . && echo Lint complete."
   },
