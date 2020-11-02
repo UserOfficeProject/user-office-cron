@@ -10,7 +10,7 @@
     "dev": "env NODE_ENV=development env API_URL=http://localhost:4000/graphql node index.js",
     "build": "docker build -t dmsc/duo-cron-job .",
     "prod": "env NODE_ENV=production node index.js",
-    "test": "env NODE_ENV=test jest --coverage",
+    "test": "env NODE_ENV=test env API_URL=http://localhost:4000/graphql jest --coverage",
     "lint": "eslint --fix . && echo Lint complete."
   },
   "lint-staged": {
