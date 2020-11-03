@@ -1,4 +1,13 @@
 node_modules
+index.js
+build
 coverage
-.env
-.env.development
+.DS_Store
+downloads
+uploads
+.dev/
+
+.vscode/launch.json
+.vscode/settings.json
+*.env
+!example.env
