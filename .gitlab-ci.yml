@@ -2,26 +2,15 @@ image: node:10
 
 stages:
   - test
-  - build-test
   - build
 
 test:
   stage: test
   script:
     - npm install
-    - NODE_ENV=ci npm run test
+    - npm run test
   tags:
     - docker
-
-build-test:
-  stage: build-test
-  script:
-    - npm install --only=production
-    - npm run tsc
-  tags:
-    - docker
-  except:
-    - develop
 
 docker build:
   image: docker:stable
@@ -34,5 +23,5 @@ docker build:
   tags:
     - docker
   only:
-    - develop
+    - master
 

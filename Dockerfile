@@ -1,15 +1,15 @@
-FROM node:12
+FROM node:12-slim
 
 USER node
 
-WORKDIR /home/node
+RUN mkdir -p /home/node/app
 
-COPY package*.json ./
+WORKDIR /home/node/app
 
-RUN npm install --production --no-optional
+COPY --chown=node:node package*.json ./
 
-COPY . .
+RUN npm ci --only=production --silent
 
-ENV  NODE_ENV production
+COPY --chown=node:node . .
 
 CMD ["node", "index.js"]

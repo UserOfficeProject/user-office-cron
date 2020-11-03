@@ -4,8 +4,8 @@ jest.setMock('node-fetch', fetch);
 const fetchOriginal = require('node-fetch');
 const sinon = require('sinon');
 
-const startPredefinedJobs = require('../lib/predefinedJobs');
 const removeInactiveUsers = require('../jobs/removeInactiveUsers');
+const runAllJobs = require('../lib/runAllJobs');
 
 describe('Test if predefined jobs are running correctly', () => {
   let clock;
@@ -38,8 +38,14 @@ describe('Test if predefined jobs are running correctly', () => {
       // NOTE: Run cron-job on every minute for testing.
       const pattern = '* * * * *';
       const logSpy = jest.spyOn(global.console, 'info');
+      const allJobs = [
+        {
+          functionToRun: removeInactiveUsers.functionToRun,
+          options: { timeToRun: pattern },
+        },
+      ];
 
-      startPredefinedJobs(pattern, removeInactiveUsers);
+      runAllJobs(allJobs);
 
       expect(logSpy).toHaveBeenCalledTimes(0);
 
