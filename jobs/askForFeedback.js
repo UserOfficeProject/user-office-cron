@@ -11,7 +11,7 @@ const getScheduledEvents = async () => {
   const getScheduledEvents = {
     query: `
     query {
-        scheduledEvents(endsAfter:"${from}", endsBefore:"${to}") {
+        scheduledEventsCore(endsAfter:"${from}", endsBefore:"${to}") {
             id
             feedback {
                 status
@@ -24,13 +24,19 @@ const getScheduledEvents = async () => {
     variables: null,
   };
 
-  const { data } = await api.call(getScheduledEvents);
-
-  if (!data || !data.scheduledEvents) {
-    throw new Error('Something went wrong! Could not fetch scheduled events.');
+  const response = await api.call(getScheduledEvents);
+  if (!response.data) {
+    logger.logError('Cant fetch events. No data returned from API', response);
+    throw new Error('Cant fetch events. No data returned from API');
   }
 
-  return data.scheduledEvents;
+  const events = response.data.scheduledEventsCore;
+  if (!events) {
+    logger.logError('Cant fetch events. No events returned from API', response);
+    throw new Error('Cant fetch events. No events returned from API');
+  }
+
+  return events;
 };
 
 const requestFeedback = async () => {
@@ -61,6 +67,10 @@ const requestFeedback = async () => {
 
       await api.call(requestFeedback);
     }
+    const numberOfEventsHandled = events.length;
+    logger.logInfo('Running chronjob', {
+      msg: `Finished sending out feedback ${numberOfEventsHandled} requests`,
+    });
   } catch (error) {
     logger.logError(error);
   }
