@@ -41,7 +41,7 @@
     "envalid": "^6.0.1",
     "eslint-plugin-jest": "^23.11.0",
     "jest": "^26.0.1",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.6",
     "sinon": "^9.0.2"
   },
   "devDependencies": {
