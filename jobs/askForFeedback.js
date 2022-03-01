@@ -11,7 +11,7 @@ const getScheduledEvents = async () => {
   const getScheduledEvents = {
     query: `
     query {
-        scheduledEventsCore(endsAfter:"${from}", endsBefore:"${to}") {
+        scheduledEventsCore(filter:{endsAfter:"${from}", endsBefore:"${to}"}) {
             id
             feedback {
                 status
