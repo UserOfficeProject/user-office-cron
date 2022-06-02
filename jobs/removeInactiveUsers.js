@@ -1,3 +1,5 @@
+const { logger } = require('@user-office-software/duo-logger');
+
 const api = require('../config/api');
 
 const getAllUsers = async () => {
@@ -9,6 +11,7 @@ const getAllUsers = async () => {
   const { data } = await api.call(getAllUsersBody);
 
   if (!data || !data.users || !data.users.users) {
+    logger.logError('Cant fetch events. No data returned from API', data);
     throw new Error('Something went wrong! Could not fetch users.');
   }
 
@@ -37,9 +40,12 @@ const constructAllRemoveUserPromises = (allUsers) => {
 const fireAllRemoveUserPromises = async (allPromises) => {
   return Promise.all(allPromises)
     .then(async () => {
-      console.info('Inactive users removed.');
+      logger.logInfo('Running cron-job', {
+        msg: 'Inactive users removed',
+      });
     })
     .catch((error) => {
+      logger.logError('Cant fetch events. No data returned from API', error);
       throw new Error(
         `Something went wrong! Could not remove some users. ${error}`
       );
@@ -47,7 +53,9 @@ const fireAllRemoveUserPromises = async (allPromises) => {
 };
 
 const checkAndRemoveInactiveUsers = async () => {
-  console.info('Running predefined Cron Job');
+  logger.logInfo('Running cron-job', {
+    msg: 'Sending out remove inactive users requests',
+  });
 
   try {
     const allUsers = await getAllUsers();
@@ -57,10 +65,15 @@ const checkAndRemoveInactiveUsers = async () => {
     if (allPromises.length > 0) {
       await fireAllRemoveUserPromises(allPromises);
     } else {
-      console.info('No inactive users.');
+      logger.logInfo('Running chron-job', {
+        msg: 'No inactive users.',
+      });
     }
   } catch (error) {
-    console.error(error);
+    logger.logError(
+      'Something went wrong while trying to remove inactive users',
+      error
+    );
   }
 };
 

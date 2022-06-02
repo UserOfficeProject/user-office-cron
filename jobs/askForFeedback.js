@@ -1,26 +1,25 @@
 const api = require('../config/api');
-const moment = require('moment');
+const { DateTime } = require('luxon');
 const { logger } = require('@user-office-software/duo-logger');
 
-const DATE_FORMAT = 'YYYY-MM-DD';
-
 const getScheduledEvents = async () => {
-  const from = moment().subtract(4, 'weeks').format(DATE_FORMAT);
-  const to = moment().add(2, 'weeks').format(DATE_FORMAT);
+  const from = DateTime.now().minus({ weeks: 4 }).toISODate();
+  const to = DateTime.now().plus({ weeks: 2 }).toISODate();
 
   const getScheduledEvents = {
     query: `
-    query {
-        scheduledEventsCore(endsAfter:"${from}", endsBefore:"${to}") {
+      query {
+        scheduledEventsCore(filter:{endsAfter:"${from}", endsBefore:"${to}"}) {
+          id
+          feedback {
+            status
+          }
+          feedbackRequests {
             id
-            feedback {
-                status
-            }
-            feedbackRequests {
-                id
-            }
+          }
         }
-    }`,
+      }
+    `,
     variables: null,
   };
 
@@ -40,7 +39,7 @@ const getScheduledEvents = async () => {
 };
 
 const requestFeedback = async () => {
-  logger.logInfo('Running chronjob', { msg: 'Sending out feedback requests' });
+  logger.logInfo('Running cronjob', { msg: 'Sending out feedback requests' });
 
   try {
     const events = await getScheduledEvents();
@@ -48,27 +47,27 @@ const requestFeedback = async () => {
     for (const event of events) {
       const requestFeedback = {
         query: `
-        mutation 
-        { 
-          requestFeedback(scheduledEventId: ${event.id}) 
-          { 
-            request {
-              id
-            }
-            rejection {
-              reason
-              context
-              exception
+          mutation { 
+            requestFeedback(scheduledEventId: ${event.id}) 
+            { 
+              request {
+                id
+              }
+              rejection {
+                reason
+                context
+                exception
+              } 
             } 
-          } 
-        }`,
+          }
+        `,
         variables: null,
       };
 
       await api.call(requestFeedback);
     }
     const numberOfEventsHandled = events.length;
-    logger.logInfo('Running chronjob', {
+    logger.logInfo('Running cronjob', {
       msg: `Finished sending out feedback ${numberOfEventsHandled} requests`,
     });
   } catch (error) {
