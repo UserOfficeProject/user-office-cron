@@ -1,5 +1,6 @@
 require('../config/configureAndValidate');
 const fetch = require('jest-fetch-mock');
+const { DateTime } = require('luxon');
 jest.setMock('node-fetch', fetch);
 const fetchOriginal = require('node-fetch');
 const sinon = require('sinon');
@@ -9,9 +10,10 @@ const runAllJobs = require('../lib/runAllJobs');
 
 describe('Test if predefined jobs are running correctly', () => {
   let clock;
+  const now = DateTime.now().startOf('minute');
 
   beforeEach(() => {
-    clock = sinon.useFakeTimers();
+    clock = sinon.useFakeTimers(now.toJSDate());
   });
 
   afterEach(() => {
@@ -37,7 +39,7 @@ describe('Test if predefined jobs are running correctly', () => {
       );
       // NOTE: Run cron-job on every minute for testing.
       const pattern = '* * * * *';
-      const logSpy = jest.spyOn(global.console, 'info');
+      const logSpy = jest.spyOn(global.console, 'log');
       const allJobs = [
         {
           functionToRun: removeInactiveUsers.functionToRun,
@@ -56,8 +58,7 @@ describe('Test if predefined jobs are running correctly', () => {
         'http://localhost:4000/graphql',
         {
           method: 'post',
-          body:
-            '{"query":"query { users { users { id placeholder created } } }","variables":null}',
+          body: '{"query":"query { users { users { id placeholder created } } }","variables":null}',
           headers: {
             Authorization: `Bearer ${process.env.API_AUTH_TOKEN}`,
             'Content-Type': 'application/json',
@@ -65,7 +66,14 @@ describe('Test if predefined jobs are running correctly', () => {
         }
       );
 
-      expect(logSpy).toBeCalledWith('Running predefined Cron Job');
+      expect(logSpy).toBeCalledWith(
+        `[${now
+          .plus({
+            minute: 1,
+          })
+          .toJSDate()
+          .toISOString()}] INFO - Running cron-job \n {"msg":"Sending out remove inactive users requests"}`
+      );
 
       fetchOriginal.mockResponse(
         JSON.stringify({
@@ -89,11 +97,25 @@ describe('Test if predefined jobs are running correctly', () => {
     });
 
     it('Should log some messages when removing inactive users is successful', () => {
-      const logSpy = jest.spyOn(global.console, 'info');
+      const logSpy = jest.spyOn(global.console, 'log');
 
       expect(logSpy).toHaveBeenCalledTimes(4);
-      expect(logSpy).toHaveBeenCalledWith('No inactive users.');
-      expect(logSpy).toHaveBeenCalledWith('Inactive users removed.');
+      expect(logSpy).toHaveBeenCalledWith(
+        `[${now
+          .plus({
+            minute: 1,
+          })
+          .toJSDate()
+          .toISOString()}] INFO - Running cron-job \n {"msg":"Sending out remove inactive users requests"}`
+      );
+      expect(logSpy).toHaveBeenCalledWith(
+        `[${now
+          .plus({
+            minute: 2,
+          })
+          .toJSDate()
+          .toISOString()}] INFO - Running cron-job \n {"msg":"Inactive users removed"}`
+      );
       expect(fetchOriginal).toHaveBeenCalledTimes(3);
     });
   });
