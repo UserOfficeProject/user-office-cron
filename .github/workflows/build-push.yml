@@ -46,4 +46,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: dmsc/duo-cron-job:${{ steps.extract_branch.outputs.branch }}
+          tags: |
+            dmsc/duo-cron-job:${{ steps.extract_branch.outputs.branch }}
+            ghcr.io/userofficeproject/user-office-cron:${{ steps.extract_branch.outputs.branch }}
