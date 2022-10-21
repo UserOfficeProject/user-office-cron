@@ -1,11 +1,10 @@
-const fetch = require('node-fetch');
-
 const { API_URL, API_AUTH_TOKEN } = process.env;
 
 class Api {
   constructor() {}
 
   async call(body) {
+    const fetch = require('node-fetch');
     try {
       const result = await fetch(API_URL, {
         method: 'post',
