@@ -33,7 +33,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - run: npm ci
-      - run: cp example.env.test .env
+      - run: cp .env.test .env
       - run: npm test
 
   build:
