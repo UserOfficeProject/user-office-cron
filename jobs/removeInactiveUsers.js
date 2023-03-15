@@ -11,7 +11,7 @@ const getAllUsers = async () => {
   const { data } = await api.call(getAllUsersBody);
 
   if (!data || !data.users || !data.users.users) {
-    logger.logError('Cant fetch events. No data returned from API', data);
+    logger.logError('Cant fetch users. No data returned from API', data);
     throw new Error('Something went wrong! Could not fetch users.');
   }
 
@@ -26,7 +26,7 @@ const constructAllRemoveUserPromises = (allUsers) => {
   return allUsers.reduce((result, user) => {
     if (user.placeholder && new Date(user.created) < currentTime) {
       const removeUserByIdBody = {
-        query: `mutation { deleteUser(id: ${user.id}) { error user { id } } }`,
+        query: `mutation { deleteUser(id: ${user.id}) { id } }`,
         variables: null,
       };
 
