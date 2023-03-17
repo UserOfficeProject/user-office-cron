@@ -47,18 +47,10 @@ const requestFeedback = async () => {
     for (const event of events) {
       const requestFeedback = {
         query: `
-          mutation { 
-            requestFeedback(scheduledEventId: ${event.id}) 
-            { 
-              request {
-                id
-              }
-              rejection {
-                reason
-                context
-                exception
-              } 
-            } 
+          mutation {
+            requestFeedback(scheduledEventId: ${event.id}) {
+              id
+            }
           }
         `,
         variables: null,
