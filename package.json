@@ -32,8 +32,8 @@
   "author": "SWAP",
   "license": "ISC",
   "engines": {
-    "npm": ">=8.0.0",
-    "node": ">=16.0.0"
+    "npm": ">=9.0.0",
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@user-office-software/duo-logger": "^2.1.1",
