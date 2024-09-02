@@ -36,7 +36,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@user-office-software/duo-logger": "^2.1.1",
+    "@user-office-software/duo-logger": "^2.2.1",
     "cron": "^3.1.7",
     "dotenv": "^16.3.1",
     "envalid": "^7.3.1",
